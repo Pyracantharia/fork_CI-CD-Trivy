@@ -1,0 +1,4 @@
+flask==2.0.1
+requests==2.26.0
+# Intentionally using an outdated package with known vulnerabilities
+urllib3==1.25.10
