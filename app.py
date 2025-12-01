@@ -7,7 +7,7 @@ from flask import Flask, request
 app = Flask(__name__)
 
 # Insecure practices that Trivy would detect:
-HARDCODED_PASSWORD = "super_secret_password123"  # Hardcoded credentials
+HARDCODED_PASSWORD = "super_secret_password1243"  # Hardcoded credentials
 API_KEY = "sk_live_51HV9qZGQLm3uY2aPkiLQJLhVDabC457y"  # Exposed API key
 
 @app.route('/execute', methods=['POST'])
