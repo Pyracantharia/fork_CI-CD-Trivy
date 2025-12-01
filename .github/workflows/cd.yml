@@ -19,7 +19,7 @@ jobs:
         id: push
         uses: docker/build-push-action@v6
         with:
-          context: .
+          context: ./ressource/calculator
           file: ./ressource/calculator/Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/ci-cd-trivy:latest
