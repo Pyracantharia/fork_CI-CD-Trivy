@@ -38,7 +38,7 @@ jobs:
           flake8 . --count --exit-zero --statistics
 
       - name: pytest
-        run: pytest ressource/calculator/tests
+        run: pytest tests
 
   trivy-scan:
     runs-on: ubuntu-latest
