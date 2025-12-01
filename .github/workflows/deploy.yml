@@ -1,41 +1,13 @@
-name: Trivy implementation
+name: CI
 
 on:
   push:
-    branches: master
+    branches: [ main, master ]
+  workflow_dispatch:
 
 permissions:
-  contents: read # allow read content of the repo
-  security-events: write # allow to upload the results to GitHub
+  contents: read
+  actions: read
+  security-events: write
 
 jobs:
-  trivy-scan:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v5
-
-      - name: Trivy with FS mode
-        uses: aquasecurity/trivy-action@0.33.1
-        with:
-          scan-type: "fs"
-          scan-ref: "."
-          format: "table"
-          severity: "CRITICAL,HIGH"
-
-      - name: Build an image from Dockerfile
-        run: |
-          docker build -t my-python-app:${{ github.sha }} .
-
-      - name: Trivy with image mode
-        uses: aquasecurity/trivy-action@0.33.1
-        with:
-          image-ref: "my-python-app:${{ github.sha }}"
-          format: "sarif"
-          output: "results.sarif"
-          severity: "CRITICAL,HIGH,MEDIUM"
-
-      - name: Upload GitHub Security
-        uses: github/codeql-action/upload-sarif@v4
-        with:
-          sarif_file: "results.sarif"
