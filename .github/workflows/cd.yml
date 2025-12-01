@@ -1,0 +1,18 @@
+name: CD
+
+on:
+  workflow_run:
+    workflows: [ "CI" ]
+    types:
+      - completed
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
+    steps:
+      # Les steps login et build/push pour Marc et qui veut
