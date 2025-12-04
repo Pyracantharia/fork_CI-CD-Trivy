@@ -1,3 +1,5 @@
+## Challenge XSS Stockée 2
+
 ### 1. Test et Premier Échec (Le Formulaire)
 Mon objectif est d'exécuter du JavaScript pour voler le cookie de l'administrateur. Je commence par tester le vecteur d'entrée le plus évident : le formulaire de message.
 
