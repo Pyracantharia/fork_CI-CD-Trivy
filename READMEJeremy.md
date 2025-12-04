@@ -1,4 +1,4 @@
-# 1. PortSwigger – File Path Traversal (Null Byte Bypass)
+# Challenge 1. PortSwigger – File Path Traversal (Null Byte Bypass)
 
 **Lab :** https://portswigger.net/web-security/file-path-traversal/lab-validate-file-extension-null-byte-bypass
 
@@ -32,7 +32,7 @@ La réponse contient le contenu du fichier `/etc/passwd` et le lab est validé.
 
 ---
 
-# 2. Root-Me – PHP Filters
+# Challenge 2. Root-Me – PHP Filters
 
 **Challenge :** https://www.root-me.org/fr/Challenges/Web-Serveur/PHP-Filters
 
@@ -66,7 +66,7 @@ Connexion avec les identifiants récupérés :
 
 ---
 
-# 3. Root-Me – CSRF : Contournement de Jeton
+# Challenge 3. Root-Me – CSRF : Contournement de Jeton
 
 **Challenge :** https://www.root-me.org/fr/Challenges/Web-Client/CSRF-contournement-de-jeton
 
@@ -105,7 +105,7 @@ Résultat : activation du compte.
 
 ---
 
-# 4. PortSwigger – CSRF Token Not Tied to User Session
+# Challenge 4. PortSwigger – CSRF Token Not Tied to User Session
 
 **Lab :** https://portswigger.net/web-security/csrf/bypassing-token-validation/lab-token-not-tied-to-user-session
 
